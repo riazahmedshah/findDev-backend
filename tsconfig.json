@@ -11,9 +11,9 @@
     "moduleResolution": "nodenext",                      /* Specify how TypeScript looks up a file from a given module specifier. */
     "strict": true,                                      /* Enable all strict type-checking options. */
     "skipLibCheck": true,                                /* Skip type checking all .d.ts files. */
-    // "baseUrl": ".",                                      /* Specify the base directory to resolve non-relative module names. */
-    // "paths": {
-    //         "@/*":["./src/"],
-    // },                                        
+    "baseUrl": ".",                                      /* Specify the base directory to resolve non-relative module names. */
+    "paths": {
+      "@/*": ["src/*"]
+    }                                      
   }
 }
