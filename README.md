@@ -1,23 +1,31 @@
-# `findDev` Backend: Auth Module 🔐
+
+
+# **findDev**
+
+A platform designed to connect developers based on mutual interest and shared skills, fostering collaboration and professional networking.
+
+---
+
+## **Auth Module 🔐**
 
 The secure gateway for user identity, authentication, and authorization within the `findDev` platform.
 
 ---
 
-## ✨ Key Features
+### ✨ Key Features
 
-- **📝 User Registration**: Secure user onboarding with password hashing and Zod validation.
-- **🔑 User Login**: Robust authentication process issuing JWT-based access and refresh tokens.
-- **🔄 Token Management**: Handles JWT generation, refresh token rotation, and invalidation.
-- **🛡️ Authentication Middleware**: Protects API endpoints by verifying access tokens.
-- **🚪 Logout**: Allows users to securely end their sessions.
+-   **📝 User Registration**: Secure user onboarding with password hashing and Zod validation.
+-   **🔑 User Login**: Robust authentication process issuing JWT-based access and refresh tokens.
+-   **🔄 Token Management**: Handles JWT generation, refresh token rotation, and invalidation.
+-   **🛡️ Authentication Middleware**: Protects API endpoints by verifying access tokens.
+-   **🚪 Logout**: Allows users to securely end their sessions.
 
 ---
 
-## 🏗️ High-Level Architecture
+### 🏗️ High-Level Architecture
 
+The `auth` module follows a layered architectural pattern for clear **separation of concerns**, **testability**, and **maintainability** within the monolith:
 ```
-The auth module follows a layered architectural pattern for separation of concerns:
 src/modules/auth/
 ├── controllers/ # Route handlers
 ├── services/ # Business logic
@@ -28,14 +36,15 @@ src/modules/auth/
 ├── utils/ # Helpers (JWT, crypto)
 └── index.ts # Module exports
 ```
-## 🔗 API Endpoints
+
+### 🔗 API Endpoints
 
 All endpoints are prefixed with `/api/auth`.
 
 * **`POST /api/auth/register`**
     * **Description**: Registers a new user account.
     * **Request Body**: `{ email: string, password: string, name?: string }`
-    * **Response**: `{ message: "User registered successfully", userId: string }` (or initial tokens).
+    * **Response**: `{ message: "User registered successfully", userId: string, accessToken: string, refreshToken: string }`
     * **Errors**: `400 Bad Request` (validation), `409 Conflict` (email already exists).
 
 * **`POST /api/auth/login`**
@@ -58,7 +67,7 @@ All endpoints are prefixed with `/api/auth`.
 
 ---
 
-## 🧪 Testing
+### 🧪 Testing
 
 Tests for the `auth` module are colocated within `__tests__/` subfolders.
 
@@ -67,6 +76,8 @@ To run tests for this module:
 ```bash
 # From the project root
 npx vitest src/modules/auth/__tests__/
+```
 or run all tests:
+```
 npx vitest
 ```
