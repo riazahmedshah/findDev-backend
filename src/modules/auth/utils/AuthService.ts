@@ -3,7 +3,7 @@ import * as jwt from "jsonwebtoken"
 const secret = "secret"
 
 export class AuthService{
-  static createToken(userId:string){
+  static createToken(userId:string):string{
     return jwt.sign(userId, secret);
   }
 }
