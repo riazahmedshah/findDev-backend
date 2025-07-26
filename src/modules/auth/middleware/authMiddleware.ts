@@ -15,13 +15,13 @@ export const authMiddleWare = (req:Request, res:Response, next:NextFunction) => 
   if(!token) return ResponseHandler.unauthorized(res)
 
   try {
-    const decode = AuthService.decodeToken(token) as AuthRequest;
+    const decode = AuthService.decodeToken(token) as {userId:string};
 
     if(!decode){
       return ResponseHandler.unauthorized(res,"INVALID_TOKEN");
     }
 
-    req.id = decode.id
+    req.userId = decode.userId
     next();
     
   } catch (error) {

@@ -7,7 +7,7 @@ interface AuthRequest extends Request{
 declare global {
   namespace Express {
     interface Request {
-      id: AuthRequest
+      userId: string
     }
   }
 }
