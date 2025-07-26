@@ -2,7 +2,7 @@ import { Response } from "express";
 import { ZodError } from "zod";
 
 export class ResponseHandler{
-  static json(res:Response, data:Record<string, any>, status=200){
+  static json(res:Response, data?:Record<string, any>, status=200){
     if(data){
       res.status(status).json(data);
     } else{
