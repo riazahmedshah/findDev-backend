@@ -20,4 +20,21 @@ export class UserRepository{
       }
     })
   }
+
+  static async createProfile(userId:string,data: Prisma.ProfileCreateInput){
+    return await prisma.profile.create({
+      data:{
+        userId,
+        name:data.name,
+        age:data.age,
+        avatar:data.avatar,
+        bio:data.bio,
+        gender:data.gender,
+        github:data.github,
+        location:data.location,
+        portfolio:data.portfolio,
+        skills:data.skills,
+      }
+    })
+  }
 }
