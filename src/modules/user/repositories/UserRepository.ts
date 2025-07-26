@@ -21,19 +21,27 @@ export class UserRepository{
     })
   }
 
-  static async createProfile(userId:string,data: Prisma.ProfileCreateInput){
+  static async createProfile(userId:string,data: Omit<Prisma.ProfileCreateInput, 'user'>){
     return await prisma.profile.create({
       data:{
         userId,
         name:data.name,
         age:data.age,
-        avatar:data.avatar,
+        photo:data.photo,
         bio:data.bio,
         gender:data.gender,
         github:data.github,
         location:data.location,
         portfolio:data.portfolio,
         skills:data.skills,
+      }
+    })
+  }
+
+  static async getProfileByUserId(userId:string){
+    return await prisma.profile.findUnique({
+      where:{
+        userId
       }
     })
   }

@@ -26,12 +26,12 @@ model User{
 }
 
 model Profile{
-  id String @id @default(ulid())
+  id String @id @default(uuid())
   name        String
   bio         String?
   age         Int?
   gender      String?
-  avatar      String?
+  photo      String?
   github      String?
   portfolio   String?
   location    String?
