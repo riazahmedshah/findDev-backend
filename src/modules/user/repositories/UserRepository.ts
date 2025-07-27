@@ -45,4 +45,25 @@ export class UserRepository{
       }
     })
   }
+
+  static async updateProfile(
+    id:string,
+    data: Omit<Prisma.ProfileUpdateInput, 'user'>
+  ){
+    return await prisma.profile.update({
+      where:{
+        id
+      },
+      data:{
+        name:data.name,
+        age:data.age,
+        bio:data.bio,
+        gender:data.gender,
+        github:data.github,
+        location:data.location,
+        portfolio:data.portfolio,
+        skills:data.skills,
+      }
+    })
+  }
 }

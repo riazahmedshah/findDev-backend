@@ -9,10 +9,10 @@ export const authMiddleWare = (req:Request, res:Response, next:NextFunction) => 
   const authHeader = req.headers['authorization']
 
   if(!authHeader || !authHeader.startsWith('Bearer ')){
-    return ResponseHandler.unauthorized(res,"INVALID_TOKEN/NOT_FOUND");
+    return ResponseHandler.unauthorized(res,"UNAUTHORISED/INVALID_TOKEN");
   }
   const token = authHeader.split(' ')[1];
-  if(!token) return ResponseHandler.unauthorized(res)
+  if(!token) return ResponseHandler.unauthorized(res,"TOKEN_NOT_FOUND")
 
   try {
     const decode = AuthService.decodeToken(token) as {userId:string};

@@ -21,3 +21,8 @@ export const profileSchema = z.object({
   portfolio:z.url().optional(),
   skills:z.string().array().max(10,'Max length is 10').optional(),
 })
+
+export const updateProfileSchema = profileSchema.omit({
+  userId:true,
+  photo:true,
+})
