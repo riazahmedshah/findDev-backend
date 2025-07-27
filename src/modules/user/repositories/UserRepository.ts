@@ -13,6 +13,17 @@ export class UserRepository{
     })
   }
 
+  static async updateUser(userId:string){
+    return await prisma.user.update({
+      where:{
+        id:userId
+      },
+      data:{
+        status: 'ACTIVE'
+      }
+    })
+  }
+
   static async getUserByEmail(email:string){
     return await prisma.user.findUnique({
       where:{
