@@ -20,6 +20,9 @@ model User{
   profile Profile?
   swipesMade Swipes[] @relation("Swiper")
   SwipesRecieved Swipes[] @relation("Swiped")
+  matchesAsUser1 Matches[] @relation("User1Matches")
+  matchesAsUser2 Matches[] @relation("User2Matches")
+
 }
 
 model Profile{
@@ -71,4 +74,14 @@ enum SwipeStatus{
 	ACCEPTED
 	REJECTED
 	IGNORED
+}
+
+model Matches{
+  id String @id @default(uuid())
+  user1Id String
+  user2Id String
+  matchedAt DateTime @default(now())
+
+  user1 User @relation("User1Matches", fields: [user1Id], references: [id])
+  user2 User @relation("User2Matches", fields: [user2Id], references: [id])
 }
