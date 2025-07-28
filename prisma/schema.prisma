@@ -51,8 +51,8 @@ enum UserStatus{
 
 model Swipes{
 	id String @id @default(uuid())
-	swiperUserId String @unique() @db.Uuid
-	swipedUserId String @unique() @db.Uuid
+	swiperUserId String 
+	swipedUserId String 
 	action SwipeAction
 	status SwipeStatus
 	createdAt DateTime @default(now())
@@ -84,4 +84,6 @@ model Matches{
 
   user1 User @relation("User1Matches", fields: [user1Id], references: [id])
   user2 User @relation("User2Matches", fields: [user2Id], references: [id])
+
+  @@unique([user1Id,user2Id])
 }
