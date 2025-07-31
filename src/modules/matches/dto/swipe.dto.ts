@@ -1,8 +1,8 @@
 import { $Enums } from "@/generated/prisma";
 
 type SwipeIds = {
-  swiper_user_id: string;
   swiped_user_id:string;
+  swiper_user_id: string;
 }
 
 export interface createSwipeDTO extends SwipeIds {
