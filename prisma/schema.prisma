@@ -54,7 +54,7 @@ model Swipes{
 	swiperUserId String 
 	swipedUserId String 
 	action SwipeAction
-	status SwipeStatus
+	status SwipeStatus @default(PENDING)
 	createdAt DateTime @default(now())
 	updatedAt DateTime @default(now())
 	
