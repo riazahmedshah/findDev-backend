@@ -13,7 +13,7 @@ export const create = async (req:Request, res:Response) => {
   }
   try {
     const isProfileExist = await UserRepository.getProfileByUserId(userId);
-    if(isProfileExist) return ResponseHandler.json(res,{MESSAGE:"PROFILE_ALREADY_EXISTS"});
+    if(isProfileExist) return ResponseHandler.json(res,{MESSAGE:"PROFILE_ALREADY_EXISTS"},409);
 
     if(photo){
       const validate = photoSchema.safeParse({photo});
