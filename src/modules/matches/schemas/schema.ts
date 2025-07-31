@@ -1,7 +1,8 @@
 import { z } from "zod"
 
 export const createSwipeSchema = z.object({
-  swipedUserId: z.uuid(),
-  action: z.enum(['RIGHT', 'LEFT'])
+  swiped_user_id: z.string(),
+  action: z.enum(['RIGHT', 'LEFT']),
+  status: z.enum(['PENDING','IGNORED'])
 });
 

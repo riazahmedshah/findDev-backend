@@ -44,7 +44,7 @@ export const SwipeService = async(data:createSwipeDTO) => {
       */
     }
 
-    return { message: "SWIPE_RECORDED_SUCCESSFULLY." };
+    return { MESSAGE: "SWIPE_RECORDED_SUCCESSFULLY." };
     
   } catch (error) {
     throw new ServiceError(500,"INTERNAL_SERVICE_ERROR","something went wrong")
