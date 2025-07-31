@@ -11,7 +11,7 @@ export class MatchingRepository{
       where:{
         swipedUserId_swiperUserId:{
           swipedUserId: swiped_user_id,
-          swiperUserId: swiper_user_id
+          swiperUserId: swiper_user_id,
         }
       }
     })
@@ -22,7 +22,8 @@ export class MatchingRepository{
       data:{
         swipedUserId:data.swiped_user_id,
         swiperUserId:data.swiper_user_id,
-        action:data.action
+        action:data.action,
+        status: data.status
       }
     })
   }

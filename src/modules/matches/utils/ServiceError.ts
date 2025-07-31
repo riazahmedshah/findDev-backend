@@ -4,7 +4,7 @@ export class ServiceError extends Error{
   message:string;
   details?:string;
 
-  constructor(statusCode:number, message:string, details:string){
+  constructor(statusCode:number, message:string, details?:string){
     super()
     this.name = "SERVICE_ERROR"
     this.statusCode = statusCode;

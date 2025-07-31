@@ -7,6 +7,7 @@ type SwipeIds = {
 
 export interface createSwipeDTO extends SwipeIds {
   action: $Enums.SwipeAction;
+  status?: $Enums.SwipeStatus;
 }
 
 export interface updateSwipeDTO extends SwipeIds{
