@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import { createSwipeSchema } from "../schemas/schema";
 import { ResponseHandler } from "@/utils/ResponseHandler";
-import { MatchingRepository } from "../repositories/MatchingRepository";
 import { SwipeService } from "../services/swipe.service";
 
 export const swipe = async (req:Request, res:Response) => {
