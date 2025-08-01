@@ -9,6 +9,6 @@ export class ServiceError extends Error{
     this.name = "SERVICE_ERROR"
     this.statusCode = statusCode;
     this.message = message;
-    this.details = this.details; 
+    this.details = details; 
   }
 }

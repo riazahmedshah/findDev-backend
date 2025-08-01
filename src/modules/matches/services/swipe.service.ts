@@ -16,7 +16,7 @@ export const SwipeService = async(data:createSwipeDTO) => {
 
     /* Prevent Swiping Back on a User Who Has Already Sent a "PENDING" Request */
     // IMPORTANT: composite key ==> swipedUserId_swiperUserId
-    const isSwipeExistsBySwipedUser = await MatchingRepository.findSwipe(data.swiper_user_id, data.swiped_user_id);
+    const isSwipeExistsBySwipedUser = await MatchingRepository.findSwipe(data.swiped_user_id, data.swiper_user_id);
     if(isSwipeExistsBySwipedUser && isSwipeExistsBySwipedUser?.status == 'PENDING'){
       throw new ServiceError(409, "CANNOT_SWIPE", "Cannot swipe on this user; they have already sent you a pending request. Please respond via your pending requests list.")
     }
@@ -24,7 +24,7 @@ export const SwipeService = async(data:createSwipeDTO) => {
 
     /* Checking: is Swiper already made a request to Swiped User.. */
     // AGAIN IMPORTANT NOTE: composite key ==> swipedUserId_swiperUserId
-    const isSwipeExists = await MatchingRepository.findSwipe(data.swiped_user_id, data.swiper_user_id);
+    const isSwipeExists = await MatchingRepository.findSwipe(data.swiper_user_id, data.swiped_user_id);
 
     if(isSwipeExists){
       throw new ServiceError(409,"ALREADY_SWIPE_RECORDED","You have already send a request to this user")
@@ -32,7 +32,7 @@ export const SwipeService = async(data:createSwipeDTO) => {
       const newSatus = data.action === 'RIGHT' ? 'PENDING' : 'IGNORED';
       await MatchingRepository.createSwipe({
         swiped_user_id: data.swiped_user_id,
-        swiper_user_id:data.swiped_user_id,
+        swiper_user_id:data.swiper_user_id,
         action:data.action,
         status:newSatus
       });
@@ -47,6 +47,10 @@ export const SwipeService = async(data:createSwipeDTO) => {
     return { MESSAGE: "SWIPE_RECORDED_SUCCESSFULLY." };
     
   } catch (error) {
+    if (error instanceof ServiceError) {
+      throw error;
+    }
+
     throw new ServiceError(500,"INTERNAL_SERVICE_ERROR","something went wrong")
   }
 }

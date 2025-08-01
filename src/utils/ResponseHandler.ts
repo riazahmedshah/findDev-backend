@@ -1,3 +1,4 @@
+import { ServiceError } from "@/modules/matches/utils/ServiceError";
 import { Response } from "express";
 import { ZodError } from "zod";
 
@@ -34,10 +35,11 @@ export class ResponseHandler{
   }
 
   static error(res: Response, error: unknown) {
-  if (error instanceof Error) {
+  if (error instanceof ServiceError) {
     const responseData = {
       error: error.name,
       message: error.message,
+      details: error.details,
       ...(process.env.NODE_ENV === 'development' && { 
         stack: error.stack 
       })
