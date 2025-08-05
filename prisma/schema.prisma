@@ -20,8 +20,8 @@ model User{
   profile Profile?
   swipesMade Swipes[] @relation("Swiper")
   SwipesRecieved Swipes[] @relation("Swiped")
-  matchesAsUser1 Matches[] @relation("User1Matches")
-  matchesAsUser2 Matches[] @relation("User2Matches")
+  matchesAsUser1 Connection[] @relation("User1Connections")
+  matchesAsUser2 Connection[] @relation("User2Connections")
 
 }
 
@@ -76,14 +76,14 @@ enum SwipeStatus{
 	IGNORED
 }
 
-model Matches{
+model Connection{
   id String @id @default(uuid())
   user1Id String
   user2Id String
   matchedAt DateTime @default(now())
 
-  user1 User @relation("User1Matches", fields: [user1Id], references: [id])
-  user2 User @relation("User2Matches", fields: [user2Id], references: [id])
+  user1 User @relation("User1Connections", fields: [user1Id], references: [id])
+  user2 User @relation("User2Connections", fields: [user2Id], references: [id])
 
   @@unique([user1Id,user2Id])
 }
