@@ -1,5 +1,4 @@
 import { prisma } from "@/config/prisma";
-import { Prisma } from "@/generated/prisma";
 import { createSwipeDTO, updateSwipeDTO } from "../dto/swipe.dto";
 import { createConnectionDTO } from "../dto/connection.dto";
 
@@ -18,6 +17,17 @@ export class MatchingRepository{
     })
   }
 
+  static async findPendingSwipes(userId: string){
+    return await prisma.swipes.findMany({
+      where:{
+        AND:[
+            {swipedUserId:userId},
+            {status:"PENDING"}
+        ]
+      }
+    })
+  }
+
   static async createSwipe(data: createSwipeDTO){
     return await prisma.swipes.create({
       data:{
@@ -28,7 +38,6 @@ export class MatchingRepository{
       }
     })
   }
-
 
   static async updateSwipe(data: updateSwipeDTO){
     return await prisma.swipes.update({
@@ -43,7 +52,6 @@ export class MatchingRepository{
       }
     })
   }
-
 
   static async createConnection(data:createConnectionDTO){
     return await prisma.connection.create({

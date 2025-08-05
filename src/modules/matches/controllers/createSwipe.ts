@@ -15,7 +15,6 @@ export const swipe = async (req:Request, res:Response) => {
       ...data, swiper_user_id: swiperUserId,
     })
 
-    if(!swipe) return;
     return ResponseHandler.created(res,swipe)
   } catch (error) {
     return ResponseHandler.error(res,error);
