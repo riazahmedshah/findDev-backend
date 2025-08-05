@@ -1,6 +1,7 @@
 import { prisma } from "@/config/prisma";
 import { Prisma } from "@/generated/prisma";
 import { createSwipeDTO, updateSwipeDTO } from "../dto/swipe.dto";
+import { createConnectionDTO } from "../dto/connection.dto";
 
 export class MatchingRepository{
   static async findSwipe(
@@ -43,5 +44,14 @@ export class MatchingRepository{
     })
   }
 
+
+  static async createConnection(data:createConnectionDTO){
+    return await prisma.connection.create({
+      data:{
+        user1Id:data.user1Id,
+        user2Id:data.user2Id
+      }
+    })
+  }
 
 }
