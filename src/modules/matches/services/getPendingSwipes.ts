@@ -12,9 +12,9 @@ export const pendingSwipesService = async(userId:string) => {
     const swiperIds = requests.map(request => request.swiperUserId);
 
     const swipers = await Promise.all(
-      swiperIds.map(id => {
+      swiperIds.map(async(id) => {
         try {
-          const profile = UserRepository.getProfileByUserId(id);
+          const profile = await UserRepository.getProfileByUserId(id);
           if(!profile){
             return {
               userId: id,
