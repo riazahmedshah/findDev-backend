@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { createSwipeSchema } from "../schemas/schema";
 import { ResponseHandler } from "@/utils/ResponseHandler";
-import { SwipeService } from "../services/swipe.service";
+import { createSwipeService } from "../services";
 
 export const swipe = async (req:Request, res:Response) => {
   const swiperUserId = req.userId;
@@ -11,7 +11,7 @@ export const swipe = async (req:Request, res:Response) => {
     return ResponseHandler.zodError(res,error);
   }
   try {
-    const swipe = await SwipeService({
+    const swipe = await createSwipeService({
       ...data, swiper_user_id: swiperUserId,
     })
 
