@@ -2,6 +2,7 @@ import { ResponseHandler } from "@/utils/ResponseHandler";
 import { NextFunction, Request, Response } from "express";
 import { AuthService } from "../utils/AuthService";
 import { AuthRequest } from "@/custom";
+import { TokenExpiredError } from "jsonwebtoken";
 
 
 
@@ -25,7 +26,9 @@ export const authMiddleWare = (req:Request, res:Response, next:NextFunction) => 
     next();
     
   } catch (error) {
-    console.error("authMiddleare error: ", error);
+    if(error instanceof TokenExpiredError){
+      return ResponseHandler.unauthorized(res,error.message)
+    }
     return ResponseHandler.error(res, error)
   }
 }
