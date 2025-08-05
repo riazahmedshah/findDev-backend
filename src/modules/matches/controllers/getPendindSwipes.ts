@@ -9,6 +9,8 @@ export const getPendindSwipes = async (req:Request, res:Response) => {
     if(!requests){
       return ResponseHandler.notFound(res,"NO_PENDING_REQUESTS_FOUND")
     }
+
+    return ResponseHandler.json(res,requests);
   } catch (error) {
     return ResponseHandler.error(res,error);
   }

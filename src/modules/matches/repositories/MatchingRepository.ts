@@ -24,6 +24,9 @@ export class MatchingRepository{
             {swipedUserId:userId},
             {status:"PENDING"}
         ]
+      },
+      select:{
+        swiperUserId:true
       }
     })
   }

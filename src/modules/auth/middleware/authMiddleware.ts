@@ -1,7 +1,6 @@
 import { ResponseHandler } from "@/utils/ResponseHandler";
 import { NextFunction, Request, Response } from "express";
 import { AuthService } from "../utils/AuthService";
-import { AuthRequest } from "@/custom";
 import { TokenExpiredError } from "jsonwebtoken";
 
 
