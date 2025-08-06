@@ -4,8 +4,8 @@ import { createConnectionDTO } from "../dto/connection.dto";
 
 export class MatchingRepository{
   static async findSwipe(
-    swiper_user_id: string,
-    swiped_user_id:string
+    swiped_user_id:string,
+    swiper_user_id: string
   ){
     return await prisma.swipes.findUnique({
       where:{
@@ -56,8 +56,8 @@ export class MatchingRepository{
     })
   }
 
-  static async createConnection(data:createConnectionDTO){
-    await prisma.$transaction([
+  static async createMatchAndAcceptSwipe(data:createConnectionDTO){
+    return await prisma.$transaction([
       prisma.connection.create({
         data:{
           user1Id:data.user1Id,
@@ -67,7 +67,7 @@ export class MatchingRepository{
       prisma.swipes.update({
         where: {
           swipedUserId_swiperUserId:{
-            swipedUserId:data.swiped_user_id,
+            swipedUserId:data.current_user_id,
             swiperUserId:data.swiper_user_id
           }
         },
