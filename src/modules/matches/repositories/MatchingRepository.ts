@@ -42,27 +42,27 @@ export class MatchingRepository{
     })
   }
 
-  static async updateSwipe(data: updateSwipeDTO){
-    return await prisma.swipes.update({
-      where:{
-        swipedUserId_swiperUserId: {
-          swipedUserId: data.swiped_user_id,
-          swiperUserId:data.swiper_user_id
+  static async createConnection(data:createConnectionDTO){
+    await prisma.$transaction([
+      prisma.connection.create({
+        data:{
+          user1Id:data.user1Id,
+          user2Id:data.user2Id
         }
-      },
-      data:{
-        status:data.status
-      }
-    })
+      }),
+      prisma.swipes.update({
+        where: {
+          swipedUserId_swiperUserId:{
+            swipedUserId:data.swiped_user_id,
+            swiperUserId:data.swiper_user_id
+          }
+        },
+        data:{
+          status:'ACCEPTED'
+        }
+      })
+    ])
   }
 
-  static async createConnection(data:createConnectionDTO){
-    return await prisma.connection.create({
-      data:{
-        user1Id:data.user1Id,
-        user2Id:data.user2Id
-      }
-    })
-  }
 
 }
