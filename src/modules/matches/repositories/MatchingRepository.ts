@@ -42,6 +42,20 @@ export class MatchingRepository{
     })
   }
 
+  static async updateSwipe(data: updateSwipeDTO){
+    return await prisma.swipes.update({
+      where:{
+        swipedUserId_swiperUserId: {
+          swipedUserId: data.swiped_user_id,
+          swiperUserId:data.swiper_user_id
+        }
+      },
+      data:{
+        status:data.status
+      }
+    })
+  }
+
   static async createConnection(data:createConnectionDTO){
     await prisma.$transaction([
       prisma.connection.create({
