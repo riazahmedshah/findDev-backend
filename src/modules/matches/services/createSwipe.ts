@@ -37,11 +37,9 @@ export async function createSwipeService(data:createSwipeDTO){
         status:newSatus
       });
 
-      /* 
-      if(data.action === 'RIGHT'){
-        FUTURE: Send Notification...
-      }
-      */
+      // (Future: Notifications) - will be triggered after success
+      // NotificationService.sendInAppNotification(swipedUserId, "swiper_user send you an connection request");
+      // NotificationService.sendEmailNotification(swipedUserId, "swiper_user send you an connection request");
     }
 
     return { MESSAGE: "SWIPE_RECORDED_SUCCESSFULLY." };

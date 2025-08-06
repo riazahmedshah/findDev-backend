@@ -28,6 +28,9 @@ export async function createConnection(data:createConnectionDTO){
       user2Id:user2IdForConnection
     });
 
+    // (Future: Notifications) - will be triggered after successful match
+    // NotificationService.sendInAppNotification(swiperUserId, "It's a match!your request accepted by swiped_user");
+    
     return newConnection;
   } catch (error) {
     if(error instanceof ServiceError) throw error;
