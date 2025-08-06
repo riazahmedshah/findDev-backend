@@ -57,14 +57,8 @@ export class MatchingRepository{
   }
 
   static async createMatchAndAcceptSwipe(data:createConnectionDTO){
-    return await prisma.$transaction([
-      prisma.connection.create({
-        data:{
-          user1Id:data.user1Id,
-          user2Id:data.user2Id
-        }
-      }),
-      prisma.swipes.update({
+    return await prisma.$transaction(async (tx) => {
+      const updatedSwipe = await tx.swipes.update({
         where: {
           swipedUserId_swiperUserId:{
             swipedUserId:data.current_user_id,
@@ -74,7 +68,16 @@ export class MatchingRepository{
         data:{
           status:'ACCEPTED'
         }
-      })
-    ])
+      });
+
+      const newConnection = await tx.connection.create({
+        data:{
+          user1Id:data.user1Id,
+          user2Id:data.user2Id
+        }
+      });
+
+      return {updatedSwipe,newConnection}
+    })
   }
 }

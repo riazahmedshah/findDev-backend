@@ -5,3 +5,7 @@ export const createSwipeSchema = z.object({
   action: z.enum(['RIGHT', 'LEFT'])
 });
 
+export const createConnectionSchema = z.object({
+  swiper_user_id:z.uuid()
+});
+
