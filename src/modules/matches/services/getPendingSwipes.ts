@@ -2,7 +2,7 @@ import { UserRepository } from "@/modules/user/repositories/UserRepository";
 import { MatchingRepository } from "../repositories/MatchingRepository";
 import { ServiceError } from "../utils/ServiceError";
 
-export const pendingSwipesService = async(userId:string) => {
+export async function pendingSwipesService(userId:string) {
   try {
     const requests = await MatchingRepository.findPendingSwipes(userId);
     if(!requests || requests.length === 0){

@@ -3,7 +3,7 @@ import { createSwipeDTO } from "../dto/swipe.dto";
 import { ServiceError } from "../utils/ServiceError";
 import { MatchingRepository } from "../repositories/MatchingRepository";
 
-export const createSwipeService = async(data:createSwipeDTO) => {
+export async function createSwipeService(data:createSwipeDTO){
   try {
     if(data.swiped_user_id === data.swiper_user_id){
       throw new ServiceError(403,"SELF_SWIPED_IS_NOT_ALLOWED")
