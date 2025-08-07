@@ -48,7 +48,6 @@ export async function createSwipeService(data:createSwipeDTO){
     if (error instanceof ServiceError) {
       throw error;
     }
-
     throw new ServiceError(500,"INTERNAL_SERVICE_ERROR","something went wrong")
   }
 }

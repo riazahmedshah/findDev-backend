@@ -1,3 +1,4 @@
+import { Prisma } from "@/generated/prisma";
 import { ServiceError } from "@/modules/matches/utils/ServiceError";
 import { Response } from "express";
 import { ZodError } from "zod";
@@ -35,23 +36,36 @@ export class ResponseHandler{
   }
 
   static error(res: Response, error: unknown) {
-  if (error instanceof ServiceError) {
-    const responseData = {
-      error: error.name,
-      message: error.message,
-      details: error.details,
-      ...(process.env.NODE_ENV === 'development' && { 
-        stack: error.stack 
-      })
-    };
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      if (error.code === 'P2002') {
+        const targetFields = error.meta?.target as string[] | undefined;
+        const message = targetFields 
+          ? `A record with these ${targetFields.join(', ')} already exists`
+          : 'Unique constraint violation';
+        
+        return ResponseHandler.json(res, {
+          error: "CONFLICT",
+          message
+        }, 409);
+      }
+    }
+    if (error instanceof ServiceError) {
+      const responseData = {
+        error: error.name,
+        message: error.message,
+        details: error.details,
+        ...(process.env.NODE_ENV === 'development' && { 
+          stack: error.stack 
+        })
+      };
 
-    const statusCode = this.getErrorStatusCode(error);
-    ResponseHandler.json(res, responseData, statusCode);
-  } else {
-      ResponseHandler.json(res, {
-        error: "INTERNAL_SERVER_ERROR",
-        message: "An unexpected error occurred"
-      }, 500);
+      const statusCode = this.getErrorStatusCode(error);
+      ResponseHandler.json(res, responseData, statusCode);
+    } else {
+        ResponseHandler.json(res, {
+          error: "INTERNAL_SERVER_ERROR",
+          message: "An unexpected error occurred"
+        }, 500);
     }
   }
 
