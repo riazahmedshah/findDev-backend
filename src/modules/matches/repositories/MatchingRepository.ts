@@ -9,9 +9,9 @@ export class MatchingRepository{
   ){
     return await prisma.swipes.findUnique({
       where:{
-        swipedUserId_swiperUserId:{
-          swipedUserId: swiped_user_id,
+        swiperUserId_swipedUserId:{
           swiperUserId: swiper_user_id,
+          swipedUserId: swiped_user_id,
         }
       }
     })
@@ -34,8 +34,8 @@ export class MatchingRepository{
   static async createSwipe(data: createSwipeDTO){
     return await prisma.swipes.create({
       data:{
-        swipedUserId:data.swiped_user_id,
         swiperUserId:data.swiper_user_id,
+        swipedUserId:data.swiped_user_id,
         action:data.action,
         status: data.status
       }
@@ -45,9 +45,9 @@ export class MatchingRepository{
   static async updateSwipe(data: updateSwipeDTO){
     return await prisma.swipes.update({
       where:{
-        swipedUserId_swiperUserId: {
+        swiperUserId_swipedUserId: {
+          swiperUserId:data.swiper_user_id,
           swipedUserId: data.swiped_user_id,
-          swiperUserId:data.swiper_user_id
         }
       },
       data:{
@@ -60,9 +60,9 @@ export class MatchingRepository{
     return await prisma.$transaction(async (tx) => {
       const updatedSwipe = await tx.swipes.update({
         where: {
-          swipedUserId_swiperUserId:{
+          swiperUserId_swipedUserId:{
+            swiperUserId:data.swiper_user_id,
             swipedUserId:data.current_user_id,
-            swiperUserId:data.swiper_user_id
           }
         },
         data:{

@@ -63,7 +63,7 @@ export async function createSwipeService(data:createSwipeDTO){
           throw new ServiceError(403, "YOU_IGNORED_THEM", "You previously ignored this user.");
           
         default:
-          throw new ServiceError(409, "EXISTING_SWIPE", "Existing interaction with this user.");
+          throw new ServiceError(409, "EXISTING_SWIPE", "Existing interaction with this userr.");
   }
       
     } else{
