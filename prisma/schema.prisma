@@ -61,7 +61,7 @@ model Swipes{
 	swiper User @relation("Swiper",fields: [swiperUserId], references:[id])
 	swiped User @relation("Swiped",fields: [swipedUserId], references:[id])
 	
-	@@unique([swipedUserId, swiperUserId])
+	@@unique([swiperUserId, swipedUserId])
 }
 
 enum SwipeAction{
