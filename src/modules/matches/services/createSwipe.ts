@@ -21,26 +21,30 @@ export async function createSwipeService(data: createSwipeDTO) {
       data.swiped_user_id,
       data.swiper_user_id
     );
-    console.log("STATUS",isSwipeExistsBySwipedUser?.status);
-    if (isSwipeExistsBySwipedUser) {
-      switch (isSwipeExistsBySwipedUser.status) {
-        case 'PENDING':
-          throw new ServiceError(409, "PENDING_REQUEST_EXISTS", "This user already sent you a request. Please respond to it first."
-          );
 
-        case 'ACCEPTED':
-          throw new ServiceError(409, "ALREADY_MATCHED", "You're already connected with this user.");
+    if (isSwipeExistsBySwipedUser && isSwipeExistsBySwipedUser.status === 'PENDING') {
+        throw new ServiceError(409, "PENDING_REQUEST_EXISTS", "This user already sent you a request. Please respond to it first.");
+    }
 
-        case 'REJECTED':
-          throw new ServiceError(403, "PREVIOUSLY_REJECTED", "You already rejected this user")
+    // if(isSwipeExistsBySwipedUser) {
+    //   switch (isSwipeExistsBySwipedUser.status) {
+    //     case 'PENDING':
+    //       throw new ServiceError(409, "PENDING_REQUEST_EXISTS", "This user already sent you a request. Please respond to it first."
+    //       );
 
-        case 'IGNORED':
-          throw new ServiceError(403, "PREVIOUSLY_DECLINED", "You previously declined this user. Cannot swipe again.");
+    //     case 'ACCEPTED':
+    //       throw new ServiceError(409, "ALREADY_MATCHED", "You're already connected with this user.");
 
-        default:
-          throw new ServiceError(409, "EXISTING_INTERACTION", "An existing interaction with this user exists.");
-      }
-    } else{
+    //     case 'REJECTED':
+    //       throw new ServiceError(403, "PREVIOUSLY_REJECTED", "You already rejected this user")
+
+    //     case 'IGNORED':
+    //       throw new ServiceError(403, "PREVIOUSLY_DECLINED", "You previously declined this user. Cannot swipe again.");
+
+    //     default:
+    //       throw new ServiceError(409, "EXISTING_INTERACTION", "An existing interaction with this user exists.");
+    //   }
+    // } 
     /* Checking: is Swiper already made a request to Swiped User.. */
     // AGAIN IMPORTANT NOTE: composite key ==> swiperUserId_swipedUserId
       const isSwipeExists = await MatchingRepository.findSwipe(
@@ -62,20 +66,21 @@ export async function createSwipeService(data: createSwipeDTO) {
             throw new ServiceError(409, "EXISTING_INTERACTION", "An existing interaction with this user exists.");
         }
 
-      } else {
-        const newSatus = data.action === 'RIGHT' ? 'PENDING' : 'IGNORED';
-        await MatchingRepository.createSwipe({
-          swiped_user_id: data.swiped_user_id,
-          swiper_user_id: data.swiper_user_id,
-          action: data.action,
-          status: newSatus
-        });
+
+      } 
+      
+      const newSatus = data.action === 'RIGHT' ? 'PENDING' : 'IGNORED';
+      await MatchingRepository.createSwipe({
+        swiped_user_id: data.swiped_user_id,
+        swiper_user_id: data.swiper_user_id,
+        action: data.action,
+        status: newSatus
+      });
 
         // (Future: Notifications) - will be triggered after success
         // NotificationService.sendInAppNotification(swipedUserId, "swiper_user send you an connection request");
         // NotificationService.sendEmailNotification(swipedUserId, "swiper_user send you an connection request");
-      }
-    }
+      
     return { MESSAGE: "SWIPE_RECORDED_SUCCESSFULLY." };
 
   } catch (error) {
