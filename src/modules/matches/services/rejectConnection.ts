@@ -13,14 +13,14 @@ export async function rejectConnectionResquest(current_user_id:string, swiper_us
       )
     }
 
-    const swipeRecord = await MatchingRepository.findSwipe(current_user_id,swiper_user_id);
+    const swipeRecord = await MatchingRepository.findSwipe(swiper_user_id,current_user_id);
     if(!swipeRecord || swipeRecord.action !== 'RIGHT' || swipeRecord.status !== 'PENDING'){
       throw new ServiceError(404,"INVALID_REQUEST","Invalid or already processed request.")
     }
 
     await MatchingRepository.updateSwipe({
-      swiped_user_id:current_user_id,
       swiper_user_id:swiper_user_id,
+      swiped_user_id:current_user_id,
       status:'REJECTED'
     });
 
