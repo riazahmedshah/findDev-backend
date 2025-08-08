@@ -23,52 +23,33 @@ export async function createSwipeService(data: createSwipeDTO) {
     );
 
     if (isSwipeExistsBySwipedUser && isSwipeExistsBySwipedUser.status === 'PENDING') {
-        throw new ServiceError(409, "PENDING_REQUEST_EXISTS", "This user already sent you a request. Please respond to it first.");
+      throw new ServiceError(409, "PENDING_REQUEST_EXISTS", "This user already sent you a request. Please respond to it first.");
     }
 
-    // if(isSwipeExistsBySwipedUser) {
-    //   switch (isSwipeExistsBySwipedUser.status) {
-    //     case 'PENDING':
-    //       throw new ServiceError(409, "PENDING_REQUEST_EXISTS", "This user already sent you a request. Please respond to it first."
-    //       );
-
-    //     case 'ACCEPTED':
-    //       throw new ServiceError(409, "ALREADY_MATCHED", "You're already connected with this user.");
-
-    //     case 'REJECTED':
-    //       throw new ServiceError(403, "PREVIOUSLY_REJECTED", "You already rejected this user")
-
-    //     case 'IGNORED':
-    //       throw new ServiceError(403, "PREVIOUSLY_DECLINED", "You previously declined this user. Cannot swipe again.");
-
-    //     default:
-    //       throw new ServiceError(409, "EXISTING_INTERACTION", "An existing interaction with this user exists.");
-    //   }
-    // } 
     /* Checking: is Swiper already made a request to Swiped User.. */
     // AGAIN IMPORTANT NOTE: composite key ==> swiperUserId_swipedUserId
-      const isSwipeExists = await MatchingRepository.findSwipe(
-        data.swiper_user_id,
-        data.swiped_user_id
-      );
+    const isSwipeExists = await MatchingRepository.findSwipe(
+      data.swiper_user_id,
+      data.swiped_user_id
+    );
 
-      if (isSwipeExists) {
-        switch (isSwipeExists.status) {
-          case 'ACCEPTED':
-            throw new ServiceError(409, "ALREADY_MATCHED", "You're already connected with this user.");
-          case 'REJECTED':
-            throw new ServiceError(403, "PREVIOUSLY_REJECTED", "You previously sent a request that was rejected. Cannot swipe again.");
-          case 'IGNORED': 
-            throw new ServiceError(403, "PREVIOUSLY_DECLINED", "You previously declined this user. Cannot swipe again.");
-          case 'PENDING': 
-            throw new ServiceError(409, "PENDING_SWIPE_EXISTS", "You already sent a request to this user. Please wait for their response.");
-          default:
-            throw new ServiceError(409, "EXISTING_INTERACTION", "An existing interaction with this user exists.");
-        }
+    if (isSwipeExists) {
+      switch (isSwipeExists.status) {
+        case 'ACCEPTED':
+          throw new ServiceError(409, "ALREADY_MATCHED", "You're already connected with this user.");
+        case 'REJECTED':
+          throw new ServiceError(403, "PREVIOUSLY_REJECTED", "You previously sent a request that was rejected. Cannot swipe again.");
+        case 'IGNORED': 
+          throw new ServiceError(403, "PREVIOUSLY_DECLINED", "You previously declined this user. Cannot swipe again.");
+        case 'PENDING': 
+          throw new ServiceError(409, "PENDING_SWIPE_EXISTS", "You already sent a request to this user. Please wait for their response.");
+        default:
+          throw new ServiceError(409, "EXISTING_INTERACTION", "An existing interaction with this user exists.");
+      }
 
 
-      } 
-      
+    } 
+
       const newSatus = data.action === 'RIGHT' ? 'PENDING' : 'IGNORED';
       await MatchingRepository.createSwipe({
         swiped_user_id: data.swiped_user_id,
