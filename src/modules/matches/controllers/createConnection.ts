@@ -12,8 +12,8 @@ export const createAndAccept = async (req:Request,res:Response) => {
   }
   try {
     const match = await createConnection(
-      currentUserId,
       data.swiper_user_id,
+      currentUserId,
     );
 
     return ResponseHandler.json(res,match);
