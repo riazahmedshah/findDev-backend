@@ -9,67 +9,51 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User{
-  id String @id @default(uuid())
-  email String @unique
-  password String
-  status UserStatus @default(PENDING_ONBOARDING)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
-
-  profile Profile?
-  swipesMade Swipes[] @relation("Swiper")
-  SwipesRecieved Swipes[] @relation("Swiped")
-  matchesAsUser1 Connection[] @relation("User1Connections")
-  matchesAsUser2 Connection[] @relation("User2Connections")
-
-}
-
-model Profile{
-  id String @id @default(uuid())
-  name        String
+model User {
+  id          String     @id @default(uuid())
+  username    String
+  email       String     @unique
+  password    String
+  firstName   String?
+  lastName    String?
   bio         String?
   age         Int?
   gender      String?
-  photo      String?
+  photo       String?
   github      String?
   portfolio   String?
   location    String?
   skills      String[]
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
 
-  userId String @unique
-
-  user User @relation(fields: [userId], references: [id])
+  requestsSent ConnectionRequests[] @relation("Sender")
+  requestsReceived ConnectionRequests[] @relation("Recipient")
+  connectionsAsUser1 Connection[] @relation("User1Connections")
+  connectionsAsUser2 Connection[] @relation("User2Connections")
 }
 
-enum UserStatus{
-  PENDING_ONBOARDING
-  ACTIVE
-  SUSPENDED
-}
-
-
-model Swipes{
+model ConnectionRequests{
 	id String @id @default(uuid())
-	swiperUserId String 
-	swipedUserId String 
-	action SwipeAction
-	status SwipeStatus @default(PENDING)
+	senderUserId String 
+	recipientUserId String 
+	action Action
+	status Status @default(PENDING)
 	createdAt DateTime @default(now())
 	updatedAt DateTime @default(now())
 	
-	swiper User @relation("Swiper",fields: [swiperUserId], references:[id])
-	swiped User @relation("Swiped",fields: [swipedUserId], references:[id])
+	sender User @relation("Sender",fields: [senderUserId], references:[id])
+	recipient User @relation("Recipient",fields: [recipientUserId], references:[id])
 	
-	@@unique([swiperUserId, swipedUserId])
+	@@unique([senderUserId, recipientUserId])
 }
 
-enum SwipeAction{
+enum Action{
 	RIGHT
 	LEFT
 }
 
-enum SwipeStatus{
+enum Status{
 	PENDING
 	ACCEPTED
 	REJECTED
