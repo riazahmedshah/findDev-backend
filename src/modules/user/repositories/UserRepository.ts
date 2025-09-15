@@ -34,13 +34,35 @@ export class UserRepository{
     })
   }
 
-  static async updateUser(userId:string, data:Prisma.UserUpdateInput){
+  static async updateProfile(
+    profileId:string,
+    data: Omit<Prisma.ProfileUpdateInput, "user">
+  ){
+    return await prisma.profile.update({
+      where:{
+        id: profileId
+      },
+      data:{
+        name: data.name,
+        age:data.age,
+        photo:data.photo,
+        bio:data.bio,
+        gender:data.gender,
+        github:data.github,
+        location:data.location,
+        portfolio:data.portfolio,
+        skills:data.skills
+      }
+    })
+  }
+
+  static async updateUser(userId:string){
     return await prisma.user.update({
       where:{
         id:userId
       },
       data:{
-        username: data.username,
+        status: "ACTIVE"
       }
     })
   }
