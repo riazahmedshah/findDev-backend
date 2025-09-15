@@ -16,7 +16,7 @@ export const signup = async (req:Request, res:Response) => {
     })
 
     return ResponseHandler.created(res,{
-      MESSAGE:`USER_${user.username}_CREATED_SUCCESSFULLY`
+      MESSAGE:`${user.username} CREATED SUCCESSFULLY`
     })
   } catch (error) {
     return ResponseHandler.error(res,error)
