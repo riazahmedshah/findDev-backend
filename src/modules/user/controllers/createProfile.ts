@@ -1,3 +1,5 @@
+import crypto from "node:crypto"
+
 import { Request, Response } from "express";
 import { photoSchema, profileSchema } from "../schema/profileSchema";
 import { ResponseHandler } from "@/utils/ResponseHandler";
@@ -23,8 +25,8 @@ export const create = async (req:Request, res:Response) => {
 
         return ResponseHandler.json(res,{MESSAGE:firstError})
       }
-
-      const path = `users/${userId}/photo.jpg`
+      const photoId = crypto.randomUUID();
+      const path = `users/${photoId}/photo.jpg`
 
       try {
         await uploadImageAndProcess(path, photo.buffer,{
@@ -50,6 +52,9 @@ export const create = async (req:Request, res:Response) => {
       photo:data.photo
     });
 
+    if(profile){
+      await UserRepository.updateUser(userId);
+    }
     return ResponseHandler.json(res,profile);
   } catch (error) {
     return ResponseHandler.error(res, error)
