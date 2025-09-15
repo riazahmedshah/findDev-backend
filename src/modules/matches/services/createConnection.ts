@@ -2,26 +2,26 @@ import { UserRepository } from "@/modules/user/repositories/UserRepository";
 import { ServiceError } from "../utils/ServiceError";
 import { MatchingRepository } from "../repositories/MatchingRepository";
 
-export async function createConnection( swiper_user_id:string,current_user_id:string){
+export async function createConnection( sender_user_id:string,current_user_id:string){
   try {
-    const isSwiperExists = await UserRepository.getUserById(swiper_user_id);
+    const isSwiperExists = await UserRepository.getUserById(sender_user_id);
     if(!isSwiperExists) {
       throw new ServiceError(
         404,
         "SWIPER_NOT_FOUND",
-        `User does not exist with id:${swiper_user_id} or user might deleted their account`
+        `User does not exist with id:${sender_user_id} or user might deleted their account`
       )
     }
 
-    const swipeRecord = await MatchingRepository.findSwipe(swiper_user_id,current_user_id,);
+    const swipeRecord = await MatchingRepository.findSwipe(sender_user_id,current_user_id,);
     if(!swipeRecord || swipeRecord.action !== 'RIGHT' || swipeRecord.status !== 'PENDING'){
       throw new ServiceError(404,"INVALID_REQUEST","Invalid or already processed request.")
     }
 
-    const [user1IdForConnection, user2IdForConnection] = [current_user_id, swiper_user_id].sort()
+    const [user1IdForConnection, user2IdForConnection] = [current_user_id, sender_user_id].sort()
 
     const {newConnection} = await MatchingRepository.createMatchAndAcceptSwipe({
-      swiper_user_id:swiper_user_id,
+      sender_user_id:sender_user_id,
       current_user_id:current_user_id,
       user1Id:user1IdForConnection,
       user2Id:user2IdForConnection

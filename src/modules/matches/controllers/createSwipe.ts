@@ -12,7 +12,7 @@ export const swipe = async (req:Request, res:Response) => {
   }
   try {
     const swipe = await createSwipeService({
-      ...data, swiper_user_id: swiperUserId,
+      ...data, sender_user_id: swiperUserId,
     })
 
     return ResponseHandler.created(res,swipe)

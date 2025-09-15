@@ -7,35 +7,35 @@ export class MatchingRepository{
     swiper_user_id: string,
     swiped_user_id:string
   ){
-    return await prisma.swipes.findUnique({
+    return await prisma.connectionRequests.findUnique({
       where:{
-        swiperUserId_swipedUserId:{
-          swiperUserId: swiper_user_id,
-          swipedUserId: swiped_user_id
+        senderUserId_recipientUserId:{
+          senderUserId: swiper_user_id,
+          recipientUserId: swiped_user_id
         }
       }
     })
   }
 
-  static async findPendingSwipes(userId: string){
-    return await prisma.swipes.findMany({
+  static async findPendingconnectionRequests(userId: string){
+    return await prisma.connectionRequests.findMany({
       where:{
         AND:[
-            {swipedUserId:userId},
+            {senderUserId:userId},
             {status:"PENDING"}
         ]
       },
       select:{
-        swiperUserId:true
+        senderUserId:true
       }
     })
   }
 
   static async createSwipe(data: createSwipeDTO){
-    return await prisma.swipes.create({
+    return await prisma.connectionRequests.create({
       data:{
-        swiperUserId:data.swiper_user_id,
-        swipedUserId:data.swiped_user_id,
+        senderUserId:data.sender_user_id,
+        recipientUserId:data.reciepent_user_id,
         action:data.action,
         status: data.status
       }
@@ -43,11 +43,11 @@ export class MatchingRepository{
   }
 
   static async updateSwipe(data: updateSwipeDTO){
-    return await prisma.swipes.update({
+    return await prisma.connectionRequests.update({
       where:{
-        swiperUserId_swipedUserId: {
-          swiperUserId:data.swiper_user_id,
-          swipedUserId: data.swiped_user_id,
+        senderUserId_recipientUserId: {
+          senderUserId:data.sender_user_id,
+          recipientUserId: data.reciepent_user_id,
         }
       },
       data:{
@@ -58,11 +58,11 @@ export class MatchingRepository{
 
   static async createMatchAndAcceptSwipe(data:createConnectionDTO){
     return await prisma.$transaction(async (tx) => {
-      const updatedSwipe = await tx.swipes.update({
+      const updatedSwipe = await tx.connectionRequests.update({
         where: {
-          swiperUserId_swipedUserId:{
-            swiperUserId:data.swiper_user_id,
-            swipedUserId:data.current_user_id
+          senderUserId_recipientUserId:{
+            senderUserId:data.sender_user_id,
+            recipientUserId:data.current_user_id
           }
         },
         data:{

@@ -6,31 +6,38 @@ import { Prisma } from "@/generated/prisma";
 
 export async function createSwipeService(data: createSwipeDTO) {
   try {
-    if (data.swiped_user_id === data.swiper_user_id) {
+    if (data.sender_user_id === data.sender_user_id) {
       throw new ServiceError(403, "SELF_SWIPE_IS_NOT_ALLOWED")
     }
 
-    const isUserExistToSwipe = await UserRepository.getUserById(data.swiped_user_id);
+    const isUserExistToSwipe = await UserRepository.getUserById(data.reciepent_user_id);
     if (!isUserExistToSwipe) {
-      throw new ServiceError(404, "USER_NOT_FOUND", `User does not exists with id: ${data.swiped_user_id}`)
+      throw new ServiceError(404, "USER_NOT_FOUND", `User does not exists with id: ${data.reciepent_user_id}`)
     }
 
     /* Prevent Swiping Back on a User Who Has Already Sent a "PENDING" Request */
     // IMPORTANT: composite key ==> swiperUserId_swipedUserId
     const isSwipeExistsBySwipedUser = await MatchingRepository.findSwipe(
-      data.swiped_user_id,
-      data.swiper_user_id
+      data.reciepent_user_id,
+      data.sender_user_id
     );
 
-    if (isSwipeExistsBySwipedUser && isSwipeExistsBySwipedUser.status === 'PENDING') {
-      throw new ServiceError(409, "PENDING_REQUEST_EXISTS", "This user already sent you a request. Please respond to it first.");
+    if (isSwipeExistsBySwipedUser) {
+      switch(isSwipeExistsBySwipedUser.status){
+        case 'PENDING':
+          throw new ServiceError(409, "PENDING_REQUEST_EXISTS", "This user already sent you a request. Please respond to it first.");
+        
+        case 'ACCEPTED':
+          throw new ServiceError(409, "ALREADY_MATCHED", "You're already connected with this user.");
+        
+      }
     }
 
     /* Checking: is Swiper already made a request to Swiped User.. */
     // AGAIN IMPORTANT NOTE: composite key ==> swiperUserId_swipedUserId
     const isSwipeExists = await MatchingRepository.findSwipe(
-      data.swiper_user_id,
-      data.swiped_user_id
+      data.sender_user_id,
+      data.reciepent_user_id
     );
 
     if (isSwipeExists) {
@@ -39,8 +46,8 @@ export async function createSwipeService(data: createSwipeDTO) {
           throw new ServiceError(409, "ALREADY_MATCHED", "You're already connected with this user.");
         case 'REJECTED':
           throw new ServiceError(403, "PREVIOUSLY_REJECTED", "You previously sent a request that was rejected. Cannot swipe again.");
-        case 'IGNORED': 
-          throw new ServiceError(403, "PREVIOUSLY_DECLINED", "You previously declined this user. Cannot swipe again.");
+        // case 'IGNORED': 
+        //   throw new ServiceError(403, "PREVIOUSLY_DECLINED", "You previously declined this user. Cannot swipe again.");
         case 'PENDING': 
           throw new ServiceError(409, "PENDING_SWIPE_EXISTS", "You already sent a request to this user. Please wait for their response.");
         default:
@@ -52,8 +59,8 @@ export async function createSwipeService(data: createSwipeDTO) {
 
       const newSatus = data.action === 'RIGHT' ? 'PENDING' : 'IGNORED';
       await MatchingRepository.createSwipe({
-        swiped_user_id: data.swiped_user_id,
-        swiper_user_id: data.swiper_user_id,
+        sender_user_id:data.sender_user_id,
+        reciepent_user_id: data.reciepent_user_id,
         action: data.action,
         status: newSatus
       });
