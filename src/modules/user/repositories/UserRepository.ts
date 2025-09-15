@@ -14,14 +14,14 @@ export class UserRepository{
     })
   }
 
-  static async updateUser(userId:string, data:Prisma.UserUpdateInput){
-    return await prisma.user.update({
-      where:{
-        id:userId
-      },
+  static async createProfile(
+    userId:string,
+    data: Omit<Prisma.ProfileCreateInput, "user">
+  ){
+    return await prisma.profile.create({
       data:{
-        firstName:data.firstName,
-        lastName:data.lastName,
+        userId: userId,
+        name: data.name,
         age:data.age,
         photo:data.photo,
         bio:data.bio,
@@ -29,7 +29,18 @@ export class UserRepository{
         github:data.github,
         location:data.location,
         portfolio:data.portfolio,
-        skills:data.skills,
+        skills:data.skills
+      }
+    })
+  }
+
+  static async updateUser(userId:string, data:Prisma.UserUpdateInput){
+    return await prisma.user.update({
+      where:{
+        id:userId
+      },
+      data:{
+        username: data.username,
       }
     })
   }
@@ -42,6 +53,17 @@ export class UserRepository{
     });
 
     if(user) return true
+    return false;
+  }
+
+  static async getProfileByUserId(id:string):Promise<Boolean>{
+    const user = await prisma.profile.findUnique({
+      where:{
+        userId:id
+      }
+    });
+
+    if(user) return true;
     return false;
   }
 
