@@ -17,8 +17,14 @@ export const signup = async (req:Request, res:Response) => {
     })
     
     const token = AuthService.createToken(user.id);
+    const response = {
+      id:user.id,
+      username:user.username,
+      email:user.email,
+      status:user.status
+    }
     return ResponseHandler.created(res,{
-      MESSAGE:`${user.username} CREATED SUCCESSFULLY`,
+      data:response,
       token
     })
   } catch (error) {
